@@ -22,7 +22,7 @@ target_link_libraries(${PROJECT_NAME})
 # Binaries #
 ############
 add_executable(odometry_transformer_node src/odometry_transformer_node.cc)
-target_link_libraries(odometry_transformer_node ${catkin_LIBRARIES})
+target_link_libraries(odometry_transformer_node ${PROJECT_NAME} ${catkin_LIBRARIES})
 
 ##########
 # EXPORT #
