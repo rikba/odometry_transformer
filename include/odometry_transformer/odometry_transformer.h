@@ -2,9 +2,11 @@
 #define ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 
 #include <string>
+#include <memory>
 
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
+#include <tf2_ros/transform_listener.h>
 
 namespace odometry_transformer {
 class OdometryTransformer {
@@ -23,6 +25,9 @@ private:
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_private_;
+
+  tf2_ros::Buffer tf_buffer_;
+  std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
 
   ros::Subscriber odometry_sub_;
   ros::Publisher odometry_pub_;

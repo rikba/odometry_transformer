@@ -14,8 +14,10 @@
 
   <build_depend>roscpp</build_depend>
   <build_depend>nav_msgs</build_depend>
+  <build_depend>tf2_ros</build_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
 
 </package>

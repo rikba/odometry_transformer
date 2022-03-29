@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.4)
 project(odometry_transformer)
 
 find_package(catkin REQUIRED
-  COMPONENTS roscpp nav_msgs)
+  COMPONENTS roscpp nav_msgs tf2_ros)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 

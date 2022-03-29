@@ -1,8 +1,16 @@
 <launch>
+  <!-- The original odometry frame -->
+  <arg name="source_frame" default="camera"/>
+  <!-- The desired odometry frame -->
+  <arg name="target_frame" default="base"/>
+
   <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
 
-    <param name="source_frame" value="camera"/>
-    <param name="target_frame" value="base"/>
+    <param name="source_frame" value="$(arg source_frame)"/>
+    <param name="target_frame" value="$(arg target_frame)"/>
 
   </node>
+
+  <!-- The tranform describing translation and rotation from desired odometry frame, e.g., IMU or base frame to odometry source, e.g., camera. -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg target_frame)_to_$(arg source_frame)_tf" args="1 0 0 0 0 0 $(arg target_frame) $(arg source_frame)"/>
 </launch>

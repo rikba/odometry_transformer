@@ -3,7 +3,8 @@
 namespace odometry_transformer {
 OdometryTransformer::OdometryTransformer(const ros::NodeHandle &nh,
                                          const ros::NodeHandle &nh_private)
-    : nh_(nh), nh_private_(nh_private) {
+    : nh_(nh), nh_private_(nh_private),
+      tf_listener_(std::make_unique<tf2_ros::TransformListener>(tf_buffer_)) {
   getRosParameters();
   subscribeToRosTopics();
 }
@@ -31,6 +32,13 @@ void OdometryTransformer::subscribeToRosTopics() {
 void OdometryTransformer::receiveOdometry(
     const nav_msgs::OdometryConstPtr &msg) {
   ROS_INFO_ONCE("Received first odometry message.");
+  try {
+    auto tf =
+        tf_buffer_.lookupTransform(source_frame_, target_frame_, ros::Time(0));
+  } catch (tf2::TransformException &ex) {
+    ROS_WARN("%s", ex.what());
+    return;
+  }
 }
 
 } // namespace odometry_transformer
