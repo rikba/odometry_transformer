@@ -1,8 +1,8 @@
 #ifndef ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 #define ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 
-#include <string>
 #include <memory>
+#include <string>
 
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
@@ -15,9 +15,10 @@ public:
                       const ros::NodeHandle &nh_private);
   void getRosParameters();
   void subscribeToRosTopics();
+  void advertiseRosTopics();
 
 private:
-  void receiveOdometry(const nav_msgs::OdometryConstPtr &msg);
+  void receiveOdometry(const nav_msgs::OdometryConstPtr &source_odometry);
 
   std::string source_frame_ = "";
   std::string target_frame_ = "";

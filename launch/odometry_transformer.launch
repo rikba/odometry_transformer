@@ -12,5 +12,6 @@
   </node>
 
   <!-- The tranform describing translation and rotation from desired odometry frame, e.g., IMU or base frame to odometry source, e.g., camera. -->
+  <!-- see also http://wiki.ros.org/tf2_ros -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg target_frame)_to_$(arg source_frame)_tf" args="1 0 0 0 0 0 $(arg target_frame) $(arg source_frame)"/>
 </launch>
