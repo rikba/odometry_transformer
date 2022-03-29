@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>odometry_transformer</name>
+  <version>1.0.0</version>
+  <description>
+    A ROS package to transform odometry messages between different robot coordinate frames.
+  </description>
+  <author>Rik Bähnemann</author>
+  <maintainer email="brik@ethz.ch">Rik Bähnemann</maintainer>
+
+  <license>MIT</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>nav_msgs</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+
+</package>
