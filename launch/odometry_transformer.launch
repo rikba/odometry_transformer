@@ -1,10 +1,8 @@
 <launch>
-  <node name="odometry_transformer"
-    pkg="odometry_transformer"
-    type="odometry_transformer_node"
-    output="screen">
+  <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
 
-    <param name="parent_frame" value="base"/>
-    <param name="child_frame" value="camera"/>
+    <param name="source_frame" value="camera"/>
+    <param name="target_frame" value="base"/>
+
   </node>
 </launch>
