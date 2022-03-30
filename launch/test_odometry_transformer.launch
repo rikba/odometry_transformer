@@ -8,4 +8,11 @@
     <param name="period" value="30.0"/>
 
   </node>
+
+  <include file="$(find odometry_transformer)/launch/odometry_transformer.launch">
+    <arg name="source_frame" value="camera" />
+    <arg name="target_frame" value="base" />
+    <arg name="source_odometry" value="/odometry_publisher/camera_odometry" />
+    <arg name="target_odometry" value="/odometry_publisher/base_odometry" />
+  </include>
 </launch>

@@ -42,7 +42,6 @@ int main(int argc, char **argv) {
     const auto zb = xb.cross(yb);
     const Eigen::Matrix3d R_WC((Eigen::Matrix3d() << xb, yb, zb).finished());
 
-
     // Pose.
     const auto T_WC =
         Eigen::Translation3d(r * c, r * s, h * s) * Eigen::Quaterniond(R_WC);

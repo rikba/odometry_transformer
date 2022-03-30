@@ -6,6 +6,10 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
+        - /Odometry1
+        - /Odometry1/Shape1
+        - /Odometry1/Covariance1
       Splitter Ratio: 0.5823529362678528
     Tree Height: 759
   - Class: rviz/Selection
@@ -57,6 +61,8 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base:
+          Value: true
         camera:
           Value: true
         world:
@@ -69,8 +75,43 @@ Visualization Manager:
       Tree:
         world:
           camera:
-            {}
+            base:
+              {}
       Update Interval: 0
+      Value: true
+    - Angle Tolerance: 0.10000000149011612
+      Class: rviz/Odometry
+      Covariance:
+        Orientation:
+          Alpha: 0.5
+          Color: 255; 255; 127
+          Color Style: Unique
+          Frame: Local
+          Offset: 1
+          Scale: 1
+          Value: true
+        Position:
+          Alpha: 0.30000001192092896
+          Color: 204; 51; 204
+          Scale: 1
+          Value: true
+        Value: true
+      Enabled: true
+      Keep: 1
+      Name: Odometry
+      Position Tolerance: 0.10000000149011612
+      Shape:
+        Alpha: 1
+        Axes Length: 0.5
+        Axes Radius: 0.10000000149011612
+        Color: 255; 25; 0
+        Head Length: 0.30000001192092896
+        Head Radius: 0.10000000149011612
+        Shaft Length: 1
+        Shaft Radius: 0.05000000074505806
+        Value: Axes
+      Topic: /odometry_publisher/camera_odometry
+      Unreliable: false
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz/Odometry
@@ -103,7 +144,7 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Arrow
-      Topic: /odometry_publisher/camera_odometry
+      Topic: /odometry_publisher/base_odometry
       Unreliable: false
       Value: true
   Enabled: true
@@ -133,26 +174,21 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Class: rviz/ThirdPersonFollower
-      Distance: 11.332898139953613
+      Angle: -0.014999999664723873
+      Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Focal Point:
-        X: 0.45154714584350586
-        Y: 0.21844792366027832
-        Z: 9.5367431640625e-7
-      Focal Shape Fixed Size: false
-      Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7953981161117554
+      Scale: 114.18244171142578
       Target Frame: apriltag
-      Value: ThirdPersonFollower (rviz)
-      Yaw: 1.2704015970230103
+      Value: TopDownOrtho (rviz)
+      X: 0.8184801340103149
+      Y: 0.4476064443588257
     Saved: ~
 Window Geometry:
   Displays:
