@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.4)
 project(odometry_transformer)
 
 find_package(catkin REQUIRED
-  COMPONENTS roscpp nav_msgs)
+  COMPONENTS roscpp nav_msgs tf2_geometry_msgs tf2_ros geometry_msgs)
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
@@ -22,7 +22,10 @@ target_link_libraries(${PROJECT_NAME})
 # Binaries #
 ############
 add_executable(odometry_transformer_node src/odometry_transformer_node.cc)
-target_link_libraries(odometry_transformer_node ${catkin_LIBRARIES})
+target_link_libraries(odometry_transformer_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+
+add_executable(test_odometry_publisher test/test_odometry_publisher.cc)
+target_link_libraries(test_odometry_publisher ${catkin_LIBRARIES})
 
 ##########
 # EXPORT #
@@ -31,10 +34,4 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
-
-install(
-  DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
-  FILES_MATCHING PATTERN "*.h"
 )

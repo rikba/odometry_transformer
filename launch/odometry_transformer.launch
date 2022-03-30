@@ -1,0 +1,23 @@
+<launch>
+  <!-- The original odometry source frame -->
+  <arg name="source_frame" default="source"/>
+  <!-- The desired odometry target frame -->
+  <arg name="target_frame" default="target"/>
+  <!-- The original odometry source topic -->
+  <arg name="source_odometry" default="source_odometry"/>
+  <!-- The desired odometry target topic -->
+  <arg name="target_odometry" default="target_odometry"/>
+
+  <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
+
+    <param name="source_frame" value="$(arg source_frame)" />
+    <param name="target_frame" value="$(arg target_frame)" />
+
+    <remap from="source_odometry" to="$(arg source_odometry)" />
+    <remap from="target_odometry" to="$(arg target_odometry)" />
+  </node>
+
+  <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
+  <!-- see also http://wiki.ros.org/tf2_ros -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="0 -10 0 3.1416 0 1.5708 $(arg source_frame) $(arg target_frame)"/>
+</launch>
