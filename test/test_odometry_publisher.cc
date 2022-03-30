@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
   const double r = 3.0;
   const double h = 1.0;
   const double T = 30.0;
-  const auto period = 2 * M_PI / T;
+  const double period = 2 * M_PI / T;
   ros::Rate loop_rate(10);
 
   geometry_msgs::TransformStamped tf;
@@ -30,13 +30,22 @@ int main(int argc, char **argv) {
     const auto t = ros::Time::now();
     const auto s = std::sin(period * tf.header.stamp.toSec());
     const auto c = std::cos(period * tf.header.stamp.toSec());
-    auto T_WC = Eigen::Affine3d::Identity();
+    const auto rs = r * s;
+    const auto rc = r * c;
 
-    // Position.
-    T_WC *= Eigen::Translation3d(r * c, r * s, h * s);
+    // Simulated state.
+    const Eigen::Vector3d p_W(rc, rs, h * s);
+    const Eigen::Vector3d v_W = period * Eigen::Vector3d(-rs, rc, h * c);
+    const auto xb = v_W.normalized();
+    const auto yb = Eigen::Vector3d::UnitZ().cross(xb).normalized();
+    const auto zb = xb.cross(yb);
+    const Eigen::Matrix3d R_WC((Eigen::Matrix3d() << xb, yb, zb).finished());
+
+    // Pose.
+    const auto T_WC =
+        Eigen::Translation3d(r * c, r * s, h * s) * Eigen::Quaterniond(R_WC);
 
     // Velocity.
-    Eigen::Vector3d v_W(-r * period * s, r * period * c, h * period * c);
 
     // Broadcast.
     // tf2
