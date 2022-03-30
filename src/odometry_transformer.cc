@@ -81,6 +81,8 @@ void OdometryTransformer::receiveOdometry(
     tf2::toMsg(T_v_T, target_odometry.twist.twist.linear);
     tf2::toMsg(T_w_T, target_odometry.twist.twist.angular);
 
+    // TODO(rikba): Transform covariance.
+
     // Publish transformed odometry.
     odometry_pub_.publish(target_odometry);
   } catch (tf2::TransformException &ex) {
