@@ -38,9 +38,10 @@ int main(int argc, char **argv) {
     const Eigen::Vector3d p_W(rc, rs, h * s);
     const Eigen::Vector3d v_W = period * Eigen::Vector3d(-rs, rc, h * c);
     const auto xb = v_W.normalized();
-    const auto yb = Eigen::Vector3d::UnitZ().cross(xb).normalized();
+    const auto yb = (-1.0 * p_W).normalized();
     const auto zb = xb.cross(yb);
     const Eigen::Matrix3d R_WC((Eigen::Matrix3d() << xb, yb, zb).finished());
+
 
     // Pose.
     const auto T_WC =
@@ -52,7 +53,6 @@ int main(int argc, char **argv) {
     const auto p_W_abs = p_W.norm();
     auto w_W = p_W.cross(v_W);
     w_W *= 1.0 / (p_W_abs * p_W_abs);
-
 
     // Broadcast.
     // tf2
