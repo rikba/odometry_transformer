@@ -45,8 +45,6 @@ int main(int argc, char **argv) {
     const auto T_WC =
         Eigen::Translation3d(r * c, r * s, h * s) * Eigen::Quaterniond(R_WC);
 
-    // Velocity.
-
     // Broadcast.
     // tf2
     tf = tf2::eigenToTransform(T_WC);
@@ -57,7 +55,7 @@ int main(int argc, char **argv) {
 
     // odometry
     odom.pose.pose = tf2::toMsg(T_WC);
-    tf2::toMsg(v_W, odom.twist.twist.linear);
+    tf2::toMsg(v_W.norm() * Eigen::Vector3d::UnitX(), odom.twist.twist.linear);
     odom.header = tf.header;
     odom.child_frame_id = tf.child_frame_id;
     odom_pub.publish(odom);
