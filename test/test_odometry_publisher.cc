@@ -17,6 +17,7 @@ int main(int argc, char **argv) {
   const double r = 3.0;
   const double h = 1.0;
   const double T = 30.0;
+  const auto period = 2 * M_PI / T;
   ros::Rate loop_rate(10);
 
   geometry_msgs::TransformStamped tf;
@@ -27,14 +28,15 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     const auto t = ros::Time::now();
-    const auto s = std::sin(2 * M_PI / T * tf.header.stamp.toSec());
-    const auto c = std::cos(2 * M_PI / T * tf.header.stamp.toSec());
+    const auto s = std::sin(period * tf.header.stamp.toSec());
+    const auto c = std::cos(period * tf.header.stamp.toSec());
     auto T_WC = Eigen::Affine3d::Identity();
 
     // Position.
     T_WC *= Eigen::Translation3d(r * c, r * s, h * s);
 
     // Velocity.
+    Eigen::Vector3d v_W(-r * period * s, r * period * c, h * period * c);
 
     // Broadcast.
     // tf2
@@ -46,7 +48,9 @@ int main(int argc, char **argv) {
 
     // odometry
     odom.pose.pose = tf2::toMsg(T_WC);
+    tf2::toMsg(v_W, odom.twist.twist.linear);
     odom.header = tf.header;
+    odom.child_frame_id = tf.child_frame_id;
     odom_pub.publish(odom);
 
     ros::spinOnce();
