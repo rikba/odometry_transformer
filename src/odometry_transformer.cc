@@ -6,8 +6,7 @@
 namespace odometry_transformer {
 OdometryTransformer::OdometryTransformer(const ros::NodeHandle &nh,
                                          const ros::NodeHandle &nh_private)
-    : nh_(nh), nh_private_(nh_private),
-      tf_listener_(std::make_unique<tf2_ros::TransformListener>(tf_buffer_)) {
+    : nh_(nh), nh_private_(nh_private), tf_listener_(tf_buffer_) {
   getRosParameters();
   subscribeToRosTopics();
   advertiseRosTopics();

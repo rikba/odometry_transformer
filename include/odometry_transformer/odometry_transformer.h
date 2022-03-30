@@ -1,7 +1,6 @@
 #ifndef ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 #define ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 
-#include <memory>
 #include <string>
 
 #include <nav_msgs/Odometry.h>
@@ -28,7 +27,7 @@ private:
   ros::NodeHandle nh_private_;
 
   tf2_ros::Buffer tf_buffer_;
-  std::unique_ptr<tf2_ros::TransformListener> tf_listener_;
+  tf2_ros::TransformListener tf_listener_;
 
   ros::Subscriber odometry_sub_;
   ros::Publisher odometry_pub_;
