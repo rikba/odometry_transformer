@@ -1,10 +1,10 @@
 #include <cmath>
 #include <string>
 
-#include <ros/ros.h>
-
 #include <geometry_msgs/TransformStamped.h>
 #include <nav_msgs/Odometry.h>
+#include <ros/ros.h>
+#include <tf2_eigen/tf2_eigen.h>
 #include <tf2_ros/transform_broadcaster.h>
 
 int main(int argc, char **argv) {
@@ -20,22 +20,34 @@ int main(int argc, char **argv) {
   ros::Rate loop_rate(10);
 
   geometry_msgs::TransformStamped tf;
-  tf.header.frame_id = "world";
-  tf.child_frame_id = "camera";
+  nav_msgs::Odometry odom;
+
+  auto odom_pub =
+      nh_private.advertise<nav_msgs::Odometry>("camera_odometry", 1);
 
   while (ros::ok()) {
-    tf.header.stamp = ros::Time::now();
+    const auto t = ros::Time::now();
+    const auto s = std::sin(2 * M_PI / T * tf.header.stamp.toSec());
+    const auto c = std::cos(2 * M_PI / T * tf.header.stamp.toSec());
+    auto T_WC = Eigen::Affine3d::Identity();
 
-    tf.transform.translation.x =
-        r * std::cos(2 * M_PI / T * tf.header.stamp.toSec());
-    tf.transform.translation.y =
-        r * std::sin(2 * M_PI / T * tf.header.stamp.toSec());
-    tf.transform.translation.z =
-        h * std::sin(2 * M_PI / T * tf.header.stamp.toSec());
+    // Position.
+    T_WC *= Eigen::Translation3d(r * c, r * s, h * s);
 
-    tf.transform.rotation.w = 1.0;
+    // Velocity.
 
+    // Broadcast.
+    // tf2
+    tf = tf2::eigenToTransform(T_WC);
+    tf.header.stamp = t;
+    tf.header.frame_id = "world";
+    tf.child_frame_id = "camera";
     tf_br_.sendTransform(tf);
+
+    // odometry
+    odom.pose.pose = tf2::toMsg(T_WC);
+    odom.header = tf.header;
+    odom_pub.publish(odom);
 
     ros::spinOnce();
     loop_rate.sleep();

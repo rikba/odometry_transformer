@@ -103,7 +103,7 @@ Visualization Manager:
         Shaft Length: 1
         Shaft Radius: 0.05000000074505806
         Value: Arrow
-      Topic: /source_odometry
+      Topic: /odometry_publisher/camera_odometry
       Unreliable: false
       Value: true
   Enabled: true
@@ -141,18 +141,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.6593716144561768
-        Y: 0.3838040828704834
+        X: 0.45154714584350586
+        Y: 0.21844792366027832
         Z: 9.5367431640625e-7
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7853981852531433
+      Pitch: 0.7953981161117554
       Target Frame: apriltag
       Value: ThirdPersonFollower (rviz)
-      Yaw: 0.7853981852531433
+      Yaw: 1.2704015970230103
     Saved: ~
 Window Geometry:
   Displays:
