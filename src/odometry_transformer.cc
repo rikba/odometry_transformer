@@ -1,6 +1,7 @@
 #include "odometry_transformer/odometry_transformer.h"
 
 #include <geometry_msgs/PoseStamped.h>
+#include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace odometry_transformer {
@@ -44,23 +45,41 @@ void OdometryTransformer::receiveOdometry(
 
   try {
     // Get source to target calibration.
-    auto tf_source_to_target =
-        tf_buffer_.lookupTransform(source_frame_, target_frame_, ros::Time(0));
+    const Eigen::Affine3d T_ST =
+        tf2::transformToEigen(tf_buffer_.lookupTransform(
+            source_frame_, target_frame_, source_odometry->header.stamp));
 
-    // Setup target odometry message.
+    // Get source pose in inertial/world coordinate frame.
+    Eigen::Affine3d T_IS;
+    Eigen::fromMsg(source_odometry->pose.pose, T_IS);
+
+    // Compute pose of target frame.
+    const Eigen::Affine3d T_IT = T_IS * T_ST;
+
+    // Compute linear twist of target frame.
+    Eigen::Vector3d S_v_S, S_w_S;
+    tf2::fromMsg(source_odometry->twist.twist.linear, S_v_S);
+    tf2::fromMsg(source_odometry->twist.twist.angular, S_w_S);
+
+    // Convert into inertial frame (not sure if this is necessary).
+    const Eigen::Vector3d I_v_S = T_IS.rotation() * S_v_S;
+    const Eigen::Vector3d I_w_S = T_IS.rotation() * S_w_S;
+    const Eigen::Vector3d I_t_ST = T_IS.rotation() * T_ST.translation();
+
+    // Rigid body velocity.
+    const Eigen::Vector3d I_v_T = I_v_S + I_w_S.cross(I_t_ST);
+    const Eigen::Vector3d T_v_T = T_IT.rotation().inverse() * I_v_T;
+
+    // The angular velocity is identical anywhere on the rigid body.
+    const Eigen::Vector3d T_w_T = T_ST.rotation().inverse() * S_w_S;
+
+    // Convert to target odometry.
     nav_msgs::Odometry target_odometry;
     target_odometry.header = source_odometry->header;
     target_odometry.child_frame_id = target_frame_;
-
-    // Tranform odometry pose.
-    geometry_msgs::PoseStamped source_pose, target_pose;
-    source_pose.header = source_odometry->header;
-    source_pose.pose = source_odometry->pose.pose;
-    target_pose.header = target_odometry.header;
-    tf2::doTransform(source_pose, target_pose, tf_source_to_target);
-    target_odometry.pose.pose = target_pose.pose;
-
-    // Transform odometry twist.
+    target_odometry.pose.pose = Eigen::toMsg(T_IT);
+    tf2::toMsg(T_v_T, target_odometry.twist.twist.linear);
+    tf2::toMsg(T_w_T, target_odometry.twist.twist.angular);
 
     // Publish transformed odometry.
     odometry_pub_.publish(target_odometry);
