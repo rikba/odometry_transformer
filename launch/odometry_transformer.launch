@@ -1,7 +1,7 @@
 <launch>
-  <!-- The original odometry frame -->
+  <!-- The original odometry source frame -->
   <arg name="source_frame" default="camera"/>
-  <!-- The desired odometry frame -->
+  <!-- The desired odometry target frame -->
   <arg name="target_frame" default="base"/>
 
   <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
