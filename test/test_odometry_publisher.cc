@@ -14,9 +14,10 @@ int main(int argc, char **argv) {
   tf2_ros::TransformBroadcaster tf_br_;
 
   // Settings
-  const double r = 3.0;
-  const double h = 1.0;
-  const double T = 30.0;
+  double r, h, T;
+  nh_private.param<double>("radius", r, 3.0);
+  nh_private.param<double>("height", h, 10.0);
+  nh_private.param<double>("period", T, 30.0);
   const double period = 2 * M_PI / T;
   ros::Rate loop_rate(10);
 
@@ -44,6 +45,14 @@ int main(int argc, char **argv) {
     // Pose.
     const auto T_WC =
         Eigen::Translation3d(r * c, r * s, h * s) * Eigen::Quaterniond(R_WC);
+    // Linear twist.
+    const auto v_C = v_W.norm() * Eigen::Vector3d::UnitX();
+
+    // Angular twist.
+    const auto p_W_abs = p_W.norm();
+    auto w_W = p_W.cross(v_W);
+    w_W *= 1.0 / (p_W_abs * p_W_abs);
+
 
     // Broadcast.
     // tf2
@@ -55,7 +64,8 @@ int main(int argc, char **argv) {
 
     // odometry
     odom.pose.pose = tf2::toMsg(T_WC);
-    tf2::toMsg(v_W.norm() * Eigen::Vector3d::UnitX(), odom.twist.twist.linear);
+    tf2::toMsg(v_C, odom.twist.twist.linear);
+    tf2::toMsg(R_WC.inverse() * w_W, odom.twist.twist.angular);
     odom.header = tf.header;
     odom.child_frame_id = tf.child_frame_id;
     odom_pub.publish(odom);
