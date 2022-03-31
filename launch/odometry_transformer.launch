@@ -25,8 +25,8 @@
     <param name="source_frame" value="$(arg source_frame)"/>
     <param name="target_frame" value="$(arg target_frame)"/>
 
-    <param name="T_r_TS" value="$(arg T_r_TS)"/>
-    <param name="q_TS" value="$(arg q_TS)"/>
+    <rosparam param="T_r_TS" subst_value="True">$(arg T_r_TS)</rosparam>
+    <rosparam param="q_TS" subst_value="True">$(arg q_TS)</rosparam>
 
     <param name="lookup_tf" value="$(arg lookup_tf)"/>
     <param name="queue_size" value="$(arg queue_size)"/>

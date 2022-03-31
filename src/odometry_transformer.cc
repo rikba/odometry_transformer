@@ -28,7 +28,8 @@ void OdometryTransformer::getRosParameters() {
 
   // Decide if you should get sensor calibration from TF or parameters.
   bool lookup_tf = false;
-  if (nh_private_.getParam("lookup_tf", lookup_tf)) {
+  if (nh_private_.getParam("lookup_tf", lookup_tf) && lookup_tf) {
+    ROS_INFO("Receiving T_ST_ from tf2 buffer.");
     tf2_ros::Buffer tf_buffer;
     tf2_ros::TransformListener tf_listener(tf_buffer);
     try {
@@ -38,6 +39,7 @@ void OdometryTransformer::getRosParameters() {
       ROS_WARN("Cannot lookup transform: %s", ex.what());
     }
   } else {
+    ROS_INFO("Receiving T_ST_ from ROS parameter server.");
     std::vector<double> T_r_TS, q_TS;
     Eigen::Affine3d T_TS = Eigen::Affine3d::Identity();
     if (nh_private_.getParam("T_r_TS", T_r_TS) && T_r_TS.size() == 3) {
@@ -54,8 +56,10 @@ void OdometryTransformer::getRosParameters() {
     }
     T_ST_ = T_TS.inverse();
   }
-  ROS_INFO_STREAM("T_r_TS: " << T_ST_.inverse().translation().transpose());
-  ROS_INFO_STREAM("q_TS: " << T_ST_.inverse().rotation());
+  ROS_INFO_STREAM("T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
+  ROS_INFO_STREAM(
+      "q_TS [x, y, z, w]: "
+      << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
 
   nh_private_.getParam("queue_size", queue_size_);
   ROS_INFO("Odometry queue size: %d", queue_size_);

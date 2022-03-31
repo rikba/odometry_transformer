@@ -18,6 +18,8 @@
     <arg name="source_odometry" value="/odometry_publisher/camera_odometry" />
     <arg name="target_odometry" value="/odometry_publisher/base_odometry" />
     <arg name="lookup_tf" value="false" />
+    <arg name="T_r_TS" value="[0.0, 10.0, 0.0]"/>
+    <arg name="q_TS" value="[0.0, 0.0, 0.0, 1.0]"/>
   </include>
 
   <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
