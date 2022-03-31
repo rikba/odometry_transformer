@@ -1,0 +1,29 @@
+<launch>
+  <arg name="use_tf" default="false" />
+  <arg name="source_frame" default="camera"/>
+  <arg name="target_frame" default="base"/>
+
+  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/test/cfg/test_odometry_publisher.rviz" />
+
+  <node name="odometry_publisher" pkg="odometry_transformer" type="test_odometry_publisher" output="screen" >
+
+    <param name="radius" value="3.0"/>
+    <param name="height" value="1.0"/>
+    <param name="period" value="30.0"/>
+
+  </node>
+
+  <include file="$(find odometry_transformer)/launch/odometry_transformer.launch">
+    <arg name="source_frame" value="$(arg source_frame)" />
+    <arg name="target_frame" value="$(arg target_frame)" />
+    <arg name="source_odometry" value="/odometry_publisher/camera_odometry" />
+    <arg name="target_odometry" value="/odometry_publisher/base_odometry" />
+    <arg name="lookup_tf" value="$(arg use_tf)" />
+    <arg name="q_TS" value="[0, 0, 0.7071081, 0.7071055]"/>
+    <arg name="T_r_TS" value="[1.0, 0.0, 0.0]"/>
+  </include>
+
+  <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
+  <!-- see also http://wiki.ros.org/tf2_ros -->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="0.0 1.0 0.0 0.0 0.0 -0.7071081 0.7071081 $(arg source_frame) $(arg target_frame)" if="$(eval arg('use_tf'))"/>
+</launch>

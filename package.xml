@@ -3,7 +3,7 @@
   <name>odometry_transformer</name>
   <version>1.0.0</version>
   <description>
-    A ROS package to transform odometry messages between different robot coordinate frames.
+    A ROS package to transform odometry messages between two robot coordinate frames.
   </description>
   <author>Rik Bähnemann</author>
   <maintainer email="brik@ethz.ch">Rik Bähnemann</maintainer>
@@ -17,11 +17,13 @@
   <build_depend>tf2_geometry_msgs</build_depend>
   <build_depend>tf2_ros</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>tf2_geometry_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>dynamic_reconfigure</exec_depend>
 
 </package>
