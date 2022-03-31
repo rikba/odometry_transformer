@@ -17,11 +17,13 @@
   <build_depend>tf2_geometry_msgs</build_depend>
   <build_depend>tf2_ros</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>dynamic_reconfigure</build_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
   <exec_depend>tf2_geometry_msgs</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>dynamic_reconfigure</exec_depend>
 
 </package>

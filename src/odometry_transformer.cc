@@ -1,11 +1,16 @@
 #include "odometry_transformer/odometry_transformer.h"
 
+#include <functional>
 #include <vector>
 
 #include <geometry_msgs/TransformStamped.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/transform_listener.h>
+
+#include <dynamic_reconfigure/Config.h>
+#include <dynamic_reconfigure/DoubleParameter.h>
+#include <dynamic_reconfigure/Reconfigure.h>
 
 namespace odometry_transformer {
 OdometryTransformer::OdometryTransformer(const ros::NodeHandle &nh,
@@ -60,6 +65,10 @@ void OdometryTransformer::getRosParameters() {
     // Broadcast TF if calibration is coming from parameter server.
     tf_static_br_.emplace();
     broadcastCalibration();
+
+    // Enable dynamic reconfigure if calibration is coming from parameter
+    // server.
+    initializeDynamicReconfigure();
   }
   ROS_INFO_STREAM(
       "T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
@@ -92,6 +101,62 @@ void OdometryTransformer::broadcastCalibration() {
 
   if (tf_static_br_.has_value())
     tf_static_br_->sendTransform(tf);
+}
+
+void OdometryTransformer::initializeDynamicReconfigure() {
+  // Manually convert current transform to dynamic reconfigure values.
+  // IMPORTANT: Only if parameters are set before dynamic server is invoked
+  // default values will be overwritten!
+  Eigen::Vector3d rpy = T_ST_.inverse().rotation().eulerAngles(0, 1, 2);
+  nh_private_.setParam("TS_roll", rpy.x());
+  nh_private_.setParam("TS_pitch", rpy.y());
+  nh_private_.setParam("TS_yaw", rpy.z());
+
+  nh_private_.setParam("T_r_TS_x", T_ST_.inverse().translation().x());
+  nh_private_.setParam("T_r_TS_y", T_ST_.inverse().translation().y());
+  nh_private_.setParam("T_r_TS_z", T_ST_.inverse().translation().z());
+
+  dynamic_reconfigure::Server<
+      odometry_transformer::OdometryTransformerConfig>::CallbackType f;
+  f = std::bind(&OdometryTransformer::reconfigureOdometryTransformer, this,
+                std::placeholders::_1, std::placeholders::_2);
+  dyn_server_.emplace();
+  dyn_server_->setCallback(f);
+}
+
+void OdometryTransformer::reconfigureOdometryTransformer(
+    odometry_transformer::OdometryTransformerConfig &config, uint32_t level) {
+  ROS_DEBUG("Dynamically updating target frame to source frame transform.");
+  Eigen::Affine3d T_TS = Eigen::Affine3d::Identity();
+
+  T_TS.linear() =
+      (Eigen::AngleAxisd(config.TS_roll, Eigen::Vector3d::UnitX()) *
+       Eigen::AngleAxisd(config.TS_pitch, Eigen::Vector3d::UnitY()) *
+       Eigen::AngleAxisd(config.TS_yaw, Eigen::Vector3d::UnitZ()))
+          .toRotationMatrix();
+
+  T_TS.translation() =
+      Eigen::Vector3d(config.T_r_TS_x, config.T_r_TS_y, config.T_r_TS_z);
+
+  T_ST_ = T_TS.inverse();
+
+  ROS_DEBUG_STREAM(
+      "T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
+  ROS_DEBUG_STREAM(
+      "q_TS [x, y, z, w]: "
+      << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
+
+  // Update parameter array.
+  const Eigen::Quaterniond q_TS = Eigen::Quaterniond(T_TS.linear());
+  nh_private_.setParam(
+      "q_TS", std::vector<double>({q_TS.x(), q_TS.y(), q_TS.z(), q_TS.w()}));
+  nh_private_.setParam("T_r_TS",
+                       std::vector<double>(T_TS.translation().data(),
+                                           T_TS.translation().data() +
+                                               T_TS.translation().size()));
+
+  // Update TF.
+  broadcastCalibration();
 }
 
 void OdometryTransformer::receiveOdometry(

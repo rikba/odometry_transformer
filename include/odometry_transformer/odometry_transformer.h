@@ -5,9 +5,12 @@
 #include <string>
 
 #include <Eigen/Geometry>
+#include <dynamic_reconfigure/server.h>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
 #include <tf2_ros/static_transform_broadcaster.h>
+
+#include "odometry_transformer/OdometryTransformerConfig.h"
 
 namespace odometry_transformer {
 class OdometryTransformer {
@@ -22,11 +25,20 @@ private:
   void receiveOdometry(const nav_msgs::OdometryConstPtr &source_odometry);
   void broadcastCalibration();
 
+  void initializeDynamicReconfigure();
+  void reconfigureOdometryTransformer(
+      odometry_transformer::OdometryTransformerConfig &config, uint32_t level);
+
   std::string source_frame_ = "";
   std::string target_frame_ = "";
   int queue_size_ = 1;
 
+  // Optionally publish TF and offer dynamic reconfigure if calibration is set
+  // from ROS parameter server.
   std::optional<tf2_ros::StaticTransformBroadcaster> tf_static_br_;
+  std::optional<dynamic_reconfigure::Server<
+      odometry_transformer::OdometryTransformerConfig>>
+      dyn_server_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_private_;
