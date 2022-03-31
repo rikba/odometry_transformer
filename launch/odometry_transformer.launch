@@ -7,6 +7,13 @@
   <arg name="source_odometry" default="source_odometry"/>
   <!-- The desired odometry target topic -->
   <arg name="target_odometry" default="target_odometry"/>
+  <!-- Odometry calibration from source eto target in source frame. -->
+  <arg name="x_source_target" default="0.0"/>
+  <arg name="y_source_target" default="0.0"/>
+  <arg name="z_source_target" default="0.0"/>
+  <arg name="roll_source_target" default="0.0"/>
+  <arg name="pitch_source_target" default="0.0"/>
+  <arg name="yaw_source_target" default="0.0"/>
 
   <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
 
@@ -19,5 +26,5 @@
 
   <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
   <!-- see also http://wiki.ros.org/tf2_ros -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="0 -10 0 3.1416 0 1.5708 $(arg source_frame) $(arg target_frame)"/>
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="$(arg x_source_target) $(arg y_source_target) $(arg z_source_target) $(arg yaw_source_target) $(arg pitch_source_target) $(arg roll_source_target) $(arg source_frame) $(arg target_frame)"/>
 </launch>
