@@ -5,7 +5,7 @@
 
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
-#include <tf2_ros/transform_listener.h>
+#include <Eigen/Geometry>
 
 namespace odometry_transformer {
 class OdometryTransformer {
@@ -26,8 +26,8 @@ private:
   ros::NodeHandle nh_;
   ros::NodeHandle nh_private_;
 
-  tf2_ros::Buffer tf_buffer_;
-  tf2_ros::TransformListener tf_listener_;
+  // SE(3) Calibration from odometry source to target.
+  Eigen::Affine3d T_ST_ = Eigen::Affine3d::Identity();
 
   ros::Subscriber odometry_sub_;
   ros::Publisher odometry_pub_;

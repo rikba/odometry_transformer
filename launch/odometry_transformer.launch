@@ -1,30 +1,35 @@
 <launch>
-  <!-- The original odometry source frame -->
-  <arg name="source_frame" default="source"/>
-  <!-- The desired odometry target frame -->
-  <arg name="target_frame" default="target"/>
   <!-- The original odometry source topic -->
   <arg name="source_odometry" default="source_odometry"/>
   <!-- The desired odometry target topic -->
   <arg name="target_odometry" default="target_odometry"/>
-  <!-- Odometry calibration from source eto target in source frame. -->
-  <arg name="x_source_target" default="0.0"/>
-  <arg name="y_source_target" default="0.0"/>
-  <arg name="z_source_target" default="0.0"/>
-  <arg name="roll_source_target" default="0.0"/>
-  <arg name="pitch_source_target" default="0.0"/>
-  <arg name="yaw_source_target" default="0.0"/>
+  <!-- The original odometry source frame id. -->
+  <arg name="source_frame" default="source"/>
+  <!-- The desired odometry target frame id. -->
+  <arg name="target_frame" default="target"/>
+  <!-- The static calibration from the target frame to the source frame in the target coordinate frame. -->
+  <!-- Translation from target frame to source frame. -->
+  <arg name="T_r_TS" default="[0.0, 0.0, 0.0]"/>
+  <!-- Rotation from target frame to source frame. Quaternion as [x,y,z,w] https://www.andre-gaschler.com/rotationconverter/ -->
+  <arg name="q_TS" default="[0.0, 0.0, 0.0, 1.0]"/>
+  <!-- Instead of parametric calibration, the node can lookup the sensor calibration from TF. -->
+  <arg name="lookup_tf" default="false"/>
+  <!-- Queue size for odometry messages. -->
+  <arg name="queue_size" default="1"/>
 
   <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
 
-    <param name="source_frame" value="$(arg source_frame)" />
-    <param name="target_frame" value="$(arg target_frame)" />
+    <remap from="source_odometry" to="$(arg source_odometry)"/>
+    <remap from="target_odometry" to="$(arg target_odometry)"/>
 
-    <remap from="source_odometry" to="$(arg source_odometry)" />
-    <remap from="target_odometry" to="$(arg target_odometry)" />
+    <param name="source_frame" value="$(arg source_frame)"/>
+    <param name="target_frame" value="$(arg target_frame)"/>
+
+    <param name="T_r_TS" value="$(arg T_r_TS)"/>
+    <param name="q_TS" value="$(arg q_TS)"/>
+
+    <param name="lookup_tf" value="$(arg lookup_tf)"/>
+    <param name="queue_size" value="$(arg queue_size)"/>
+
   </node>
-
-  <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
-  <!-- see also http://wiki.ros.org/tf2_ros -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="$(arg x_source_target) $(arg y_source_target) $(arg z_source_target) $(arg yaw_source_target) $(arg pitch_source_target) $(arg roll_source_target) $(arg source_frame) $(arg target_frame)"/>
 </launch>

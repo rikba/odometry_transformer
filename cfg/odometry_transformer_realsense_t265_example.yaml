@@ -1,0 +1,8 @@
+# The static calibration from the target frame to the source frame in the target
+# coordinate frame. For example from robot body frame to camera frame in robot
+# body frame coordinates.
+T_r_TS: [0.11, 0.01, 0.0] # Translation from target frame to source frame.
+q_TS: [0, 0.3826834, 0, 0.9238796] # Rotation from target frame to source frame. Quaternion as [x,y,z,w] https://www.andre-gaschler.com/rotationconverter/
+source_frame: "camera_pose_frame" # The source frame id, e.g., camera_pose_frame.
+target_frame: "robot_pose_frame" # The target frame id, e.g., robot_base.
+publish_tf: true # Publish target frame in TF.
