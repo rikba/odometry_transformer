@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <geometry_msgs/PoseStamped.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <tf2_eigen/tf2_eigen.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <tf2_ros/transform_listener.h>
@@ -55,8 +55,13 @@ void OdometryTransformer::getRosParameters() {
       ROS_WARN_STREAM(log_param_error.c_str() << "q_TS");
     }
     T_ST_ = T_TS.inverse();
+
+    // Broadcast TF if calibration is coming from parameter server.
+    tf_static_br_.emplace();
+    broadcastCalibration();
   }
-  ROS_INFO_STREAM("T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
+  ROS_INFO_STREAM(
+      "T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
   ROS_INFO_STREAM(
       "q_TS [x, y, z, w]: "
       << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
@@ -75,6 +80,17 @@ void OdometryTransformer::advertiseRosTopics() {
   odometry_pub_ =
       nh_.advertise<nav_msgs::Odometry>("target_odometry", queue_size_);
   ROS_INFO("Advertising %s", odometry_pub_.getTopic().c_str());
+}
+
+void OdometryTransformer::broadcastCalibration() {
+  geometry_msgs::TransformStamped tf = tf2::eigenToTransform(T_ST_);
+
+  tf.header.stamp = ros::Time::now();
+  tf.header.frame_id = source_frame_;
+  tf.child_frame_id = target_frame_;
+
+  if (tf_static_br_.has_value())
+    tf_static_br_->sendTransform(tf);
 }
 
 void OdometryTransformer::receiveOdometry(

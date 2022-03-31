@@ -1,11 +1,13 @@
 #ifndef ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 #define ODOMETRY_TRANSFORMER_ODOMETRY_TRANSFORMER_H_
 
+#include <optional>
 #include <string>
 
+#include <Eigen/Geometry>
 #include <nav_msgs/Odometry.h>
 #include <ros/ros.h>
-#include <Eigen/Geometry>
+#include <tf2_ros/static_transform_broadcaster.h>
 
 namespace odometry_transformer {
 class OdometryTransformer {
@@ -18,10 +20,13 @@ public:
 
 private:
   void receiveOdometry(const nav_msgs::OdometryConstPtr &source_odometry);
+  void broadcastCalibration();
 
   std::string source_frame_ = "";
   std::string target_frame_ = "";
   int queue_size_ = 1;
+
+  std::optional<tf2_ros::StaticTransformBroadcaster> tf_static_br_;
 
   ros::NodeHandle nh_;
   ros::NodeHandle nh_private_;
