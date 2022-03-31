@@ -132,7 +132,7 @@ Visualization Manager:
           Scale: 1
           Value: true
         Value: true
-      Enabled: true
+      Enabled: false
       Keep: 100
       Name: Odometry
       Position Tolerance: 0.10000000149011612
@@ -148,7 +148,7 @@ Visualization Manager:
         Value: Axes
       Topic: /odometry_publisher/base_odometry
       Unreliable: false
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 186; 189; 182
@@ -186,11 +186,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 36.66423797607422
+      Scale: 57.53582000732422
       Target Frame: apriltag
       Value: TopDownOrtho (rviz)
-      X: 6.446202278137207
-      Y: 3.2585418224334717
+      X: 1.5178771018981934
+      Y: -2.7650933265686035
     Saved: ~
 Window Geometry:
   Displays:

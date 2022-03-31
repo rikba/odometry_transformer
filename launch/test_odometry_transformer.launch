@@ -1,4 +1,5 @@
 <launch>
+  <arg name="use_tf" default="false" />
   <arg name="source_frame" default="camera"/>
   <arg name="target_frame" default="base"/>
 
@@ -17,12 +18,12 @@
     <arg name="target_frame" value="$(arg target_frame)" />
     <arg name="source_odometry" value="/odometry_publisher/camera_odometry" />
     <arg name="target_odometry" value="/odometry_publisher/base_odometry" />
-    <arg name="lookup_tf" value="false" />
-    <arg name="T_r_TS" value="[0.0, 10.0, 0.0]"/>
-    <arg name="q_TS" value="[0.0, 0.0, 0.0, 1.0]"/>
+    <arg name="lookup_tf" value="$(arg use_tf)" />
+    <arg name="q_TS" value="[0.0, 0.0, 1.0, 0.0]"/>
+    <arg name="T_r_TS" value="[1.0, 0.0, 0.0]"/>
   </include>
 
   <!-- The tranform describing translation and rotation from odometry source, e.g., camera, to desired odometry frame, e.g., IMU or base frame. -->
   <!-- see also http://wiki.ros.org/tf2_ros -->
-  <!--node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="0.0 -10.0 0.0 0 0 0 $(arg source_frame) $(arg target_frame)"/-->
+  <node pkg="tf2_ros" type="static_transform_publisher" name="$(arg source_frame)_to_$(arg target_frame)_tf" args="-1.0 0.0 0.0 0.0 0.0 -1.0 0.0 $(arg source_frame) $(arg target_frame)" if="$(eval arg('use_tf'))"/>
 </launch>
