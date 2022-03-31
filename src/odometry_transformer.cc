@@ -42,15 +42,16 @@ void OdometryTransformer::getRosParameters() {
     ROS_INFO("Receiving T_ST_ from ROS parameter server.");
     std::vector<double> T_r_TS, q_TS;
     Eigen::Affine3d T_TS = Eigen::Affine3d::Identity();
-    // First rotation, then translation!
     if (nh_private_.getParam("q_TS", q_TS) && q_TS.size() == 4) {
       // In Eigen the imaginary coefficient w is leading.
-      T_TS *= Eigen::Quaterniond(q_TS[3], q_TS[0], q_TS[1], q_TS[2]);
+      T_TS.linear() = Eigen::Quaterniond(q_TS[3], q_TS[0], q_TS[1], q_TS[2])
+                          .normalized()
+                          .toRotationMatrix();
     } else {
       ROS_WARN_STREAM(log_param_error.c_str() << "q_TS");
     }
     if (nh_private_.getParam("T_r_TS", T_r_TS) && T_r_TS.size() == 3) {
-      T_TS *= Eigen::Translation3d(Eigen::Vector3d(T_r_TS.data()));
+      T_TS.translation() = Eigen::Vector3d(T_r_TS.data());
     } else {
       ROS_WARN_STREAM(log_param_error.c_str() << "T_r_TS");
     }
@@ -114,7 +115,7 @@ void OdometryTransformer::receiveOdometry(
   const Eigen::Vector3d I_w_S = T_IS.rotation() * S_w_S;
   const Eigen::Vector3d I_t_ST = T_IS.rotation() * T_ST_.translation();
 
-  // Rigid body velocity.
+  // Rigid body linear velocity.
   const Eigen::Vector3d I_v_T = I_v_S + I_w_S.cross(I_t_ST);
   const Eigen::Vector3d T_v_T = T_IT.rotation().inverse() * I_v_T;
 

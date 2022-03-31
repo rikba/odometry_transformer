@@ -8,7 +8,8 @@
   <!-- The desired odometry target frame id. -->
   <arg name="target_frame" default="target"/>
   <!-- The static calibration from the target frame to the source frame in the target coordinate frame. -->
-  <!-- Rotation from target frame to source frame. Quaternion as [x,y,z,w] https://www.andre-gaschler.com/rotationconverter/ -->
+  <!-- Rotation from target frame to source frame. Quaternion as [x,y,z,w] -->
+  <!-- See also https://www.andre-gaschler.com/rotationconverter/ -->
   <arg name="q_TS" default="[0.0, 0.0, 0.0, 1.0]"/>
   <!-- Translation from target frame to source frame. -->
   <arg name="T_r_TS" default="[0.0, 0.0, 0.0]"/>
