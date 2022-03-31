@@ -3,7 +3,7 @@
   <name>odometry_transformer</name>
   <version>1.0.0</version>
   <description>
-    A ROS package to transform odometry messages between different robot coordinate frames.
+    A ROS package to transform odometry messages between two robot coordinate frames.
   </description>
   <author>Rik Bähnemann</author>
   <maintainer email="brik@ethz.ch">Rik Bähnemann</maintainer>

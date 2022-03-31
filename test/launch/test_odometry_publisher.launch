@@ -3,7 +3,7 @@
   <arg name="source_frame" default="camera"/>
   <arg name="target_frame" default="base"/>
 
-  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/cfg/rviz/test.rviz" />
+  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/test/cfg/test_odometry_publisher.rviz" />
 
   <node name="odometry_publisher" pkg="odometry_transformer" type="test_odometry_publisher" output="screen" >
 
