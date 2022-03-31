@@ -1,0 +1,19 @@
+<launch>
+  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/cfg/realsense_t265.rviz" />
+
+  <include file="$(find odometry_transformer)/launch/odometry_transformer.launch">
+    <arg name="source_frame" value="camera_pose_frame" />
+    <arg name="target_frame" value="robot_body_frame" />
+    <arg name="source_odometry" value="/camera/odom/sample" />
+    <arg name="target_odometry" value="/camera/odom_body/sample" />
+    <arg name="x_source_target" default="-0.11"/>
+    <arg name="y_source_target" default="-0.01"/>
+    <arg name="z_source_target" default="0.0"/>
+    <arg name="roll_source_target" default="0.0"/>
+    <arg name="pitch_source_target" default="-0.78"/>
+    <arg name="yaw_source_target" default="0.0"/>
+  </include>
+
+  <include file="$(find realsense2_camera)/launch/rs_t265.launch"/>
+
+</launch>
