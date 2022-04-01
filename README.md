@@ -14,7 +14,13 @@ Output: T_IT, v_T, w_T
 
 ## How to use.
 The [odometry_transformer.launch](launch/odometry_transformer.launch) file shows how to startup the ROS node and pass all relevant parameters. The user can pass the calibration between the odometry source frame and odometry target frame either via parameter array or via [tf2_ros static_transform_publisher](http://wiki.ros.org/tf2_ros).
+```
+roslaunch odometry_transformer odometry_transformer.launch arg:=value
+```
 
 ## Example
 Convert the odometry (position, orientation, linear and angular velocity) measured by the [Realsense Tracking Camera T265](https://www.intelrealsense.com/tracking-camera-t265/) from the camera odometry frame to the robot base frame. For startup details see the [test_realsense_t265.launch](test/launch/test_realsense_t265.launch) file.
+```
+roslaunch odometry_transformer test_realsense_t265.launch
+```
 ![Odometry transformation of Realsense Tracking Camera T265.](https://user-images.githubusercontent.com/11293852/161270225-cc7c778b-d4d2-406a-bf67-f643ed6784f6.gif)
