@@ -17,3 +17,4 @@ The [odometry_transformer.launch](launch/odometry_transformer.launch) file shows
 
 ## Example
 Convert the odometry (position, orientation, linear and angular velocity) measured by the [Realsense Tracking Camera T265](https://www.intelrealsense.com/tracking-camera-t265/) from the camera odometry frame to the robot base frame. For startup details see the [test_realsense_t265.launch](test/launch/test_realsense_t265.launch) file.
+![Odometry transformation of Realsense Tracking Camera T265.](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
