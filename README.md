@@ -1,5 +1,10 @@
 # odometry_transformer
-A ROS package to transform odometry messages between two coordinate frames on a rigid body.
+A ROS package to transform odometry messages from source frame `S` to target frame `T` on a rigid body.
+```
+Input: T_IS, T_ST, v_S, w_S
+Output: T_IT, v_T, w_T
+```
+![Problem description of transforming odometry on a rigid body.](http://url/to/img.png)
 
 ## Features
 - Given known offset and rotation between odometry source and target frame, transform and publish odometry in target frame.
