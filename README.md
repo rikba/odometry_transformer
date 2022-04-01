@@ -4,7 +4,7 @@ A ROS package to transform odometry messages between two coordinate frames on a 
 ## Features
 - Given known offset and rotation between odometry source and target frame, transform and publish odometry in target frame.
 - Pass sensor calibration either by ROS parameter server or TF tree.
-- Dynamically re-configure offset and orientation via (rqt_reconfigure)[http://wiki.ros.org/rqt_reconfigure].
+- Dynamically re-configure offset and orientation via [rqt_reconfigure](http://wiki.ros.org/rqt_reconfigure).
 - Integration as ROS node, all parameters accessible as [roslaunch arguments](launch/odometry_transformer.launch).
 
 ## How to use.
