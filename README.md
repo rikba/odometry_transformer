@@ -1,8 +1,8 @@
 # odometry_transformer
-A ROS package to transform odometry messages from source frame `S` to target frame `T` on a rigid body.
+A ROS package to transform odometry messages from source frame `S` to target frame `T` on a rigid body. For example this software transforms odometry from a tracking camera coordinate frame to a robot body frame.
 ```
-Input: T_IS, T_ST, v_S, w_S
-Output: T_IT, v_T, w_T
+Input: source odometry (T_IS, v_S, w_S), calibration source to target (T_ST)
+Output: target odometry (T_IT, v_T, w_T)
 ```
 ![Problem description of transforming odometry on a rigid body.](https://user-images.githubusercontent.com/11293852/161266750-58eec6a4-a13b-447c-b990-9517a6e6c90d.png)
 
