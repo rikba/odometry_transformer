@@ -1,5 +1,5 @@
 <launch>
-  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/test/cfg/test_realsense_t265.rviz" />
+  <node type="rviz" name="rviz" pkg="rviz"  args="-d $(find odometry_transformer)/test/cfg/test_realsense_t265.rviz"/>
 
   <include file="$(find odometry_transformer)/launch/odometry_transformer.launch">
     <arg name="source_frame" value="camera_pose_frame" />
@@ -36,7 +36,7 @@
 
       <arg name="linear_accel_cov"         value="0.01"/>
       <arg name="initial_reset"            value="true"/>
-      <arg name="reconnect_timeout"        value="6.0"/>
+      <arg name="reconnect_timeout"        value="5.0"/>
       <arg name="unite_imu_method"         value=""/>
 
       <arg name="publish_odom_tf"          value="true"/>
