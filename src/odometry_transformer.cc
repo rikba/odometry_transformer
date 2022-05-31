@@ -78,6 +78,13 @@ void OdometryTransformer::getRosParameters() {
 
   nh_private_.getParam("queue_size", queue_size_);
   ROS_INFO("Odometry queue size: %d", queue_size_);
+
+  nh_private_.getParam("tcp_no_delay", tcp_no_delay_);
+  if (tcp_no_delay_) {
+    ROS_INFO("TCP no delay activated.");
+  } else {
+    ROS_INFO("TCP no delay de-activated.");
+  }
 }
 
 void OdometryTransformer::subscribeToRosTopics() {
@@ -85,7 +92,9 @@ void OdometryTransformer::subscribeToRosTopics() {
                                 queue_size_,
                                 &OdometryTransformer::receiveOdometry,
                                 this,
-                                ros::TransportHints().tcpNoDelay());
+                                tcp_no_delay_
+                                ? ros::TransportHints().tcpNoDelay()
+                                : ros::TransportHints());
   ROS_INFO("Subscribed to %s", odometry_sub_.getTopic().c_str());
 }
 
