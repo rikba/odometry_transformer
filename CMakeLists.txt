@@ -8,6 +8,8 @@ find_package(catkin
   tf2_geometry_msgs
   tf2_ros geometry_msgs
   dynamic_reconfigure
+  nodelet
+  pluginlib
   )
 
 include_directories(include ${catkin_INCLUDE_DIRS})
@@ -26,7 +28,8 @@ set(CMAKE_BUILD_TYPE Release)
 #############
 # LIBRARIES #
 #############
-add_library(${PROJECT_NAME} src/odometry_transformer.cc)
+add_library(${PROJECT_NAME} src/odometry_transformer.cc
+                            src/odometry_transformer_nodelet.cc)
 target_link_libraries(${PROJECT_NAME})
 
 ############
@@ -46,4 +49,7 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+install(FILES nodelet_plugin.xml
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )

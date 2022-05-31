@@ -18,6 +18,8 @@
   <build_depend>tf2_ros</build_depend>
   <build_depend>geometry_msgs</build_depend>
   <build_depend>dynamic_reconfigure</build_depend>
+  <build_depend>nodelet</build_depend>
+  <build_depend>pluginlib</build_depend>
 
   <exec_depend>roscpp</exec_depend>
   <exec_depend>nav_msgs</exec_depend>
@@ -25,5 +27,10 @@
   <exec_depend>tf2_ros</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>dynamic_reconfigure</exec_depend>
+  <exec_depend>nodelet</exec_depend>
+  <exec_depend>pluginlib</exec_depend>
 
+  <export>
+    <nodelet plugin="${prefix}/nodelet_plugin.xml" />
+  </export>
 </package>
