@@ -1,0 +1,5 @@
+tracking_module:
+  enable_map_preservation: false
+  enable_mapping: false
+  enable_pose_jumping: false
+  enable_relocalization: false
