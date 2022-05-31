@@ -17,6 +17,9 @@
   <arg name="lookup_tf" default="false"/>
   <!-- Queue size for odometry messages. -->
   <arg name="queue_size" default="1"/>
+  <!-- Use tcpNoDelay() to subscribe to source odometry. Uses more CPU! -->
+  <!-- This is necessary to avoid message drops at high rate. It is not necessary when using nodelets or low rate odometry. -->
+  <arg name="tcp_no_delay" default="true" />
 
   <node name="odometry_transformer" pkg="odometry_transformer" type="odometry_transformer_node" output="screen">
 
@@ -31,6 +34,7 @@
 
     <param name="lookup_tf" value="$(arg lookup_tf)"/>
     <param name="queue_size" value="$(arg queue_size)"/>
+    <param name="tcp_no_delay" value="$(arg tcp_no_delay)"/>
 
   </node>
 </launch>
