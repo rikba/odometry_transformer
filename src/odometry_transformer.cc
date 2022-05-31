@@ -50,8 +50,8 @@ void OdometryTransformer::getRosParameters() {
     if (nh_private_.getParam("q_TS", q_TS) && q_TS.size() == 4) {
       // In Eigen the imaginary coefficient w is leading.
       T_TS.linear() = Eigen::Quaterniond(q_TS[3], q_TS[0], q_TS[1], q_TS[2])
-                          .normalized()
-                          .toRotationMatrix();
+          .normalized()
+          .toRotationMatrix();
     } else {
       ROS_WARN_STREAM(log_param_error.c_str() << "q_TS");
     }
@@ -74,15 +74,18 @@ void OdometryTransformer::getRosParameters() {
       "T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
   ROS_INFO_STREAM(
       "q_TS [x, y, z, w]: "
-      << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
+          << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
 
   nh_private_.getParam("queue_size", queue_size_);
   ROS_INFO("Odometry queue size: %d", queue_size_);
 }
 
 void OdometryTransformer::subscribeToRosTopics() {
-  odometry_sub_ = nh_.subscribe("source_odometry", queue_size_,
-                                &OdometryTransformer::receiveOdometry, this);
+  odometry_sub_ = nh_.subscribe("source_odometry",
+                                queue_size_,
+                                &OdometryTransformer::receiveOdometry,
+                                this,
+                                ros::TransportHints().tcpNoDelay());
   ROS_INFO("Subscribed to %s", odometry_sub_.getTopic().c_str());
 }
 
@@ -131,8 +134,8 @@ void OdometryTransformer::reconfigureOdometryTransformer(
 
   T_TS.linear() =
       (Eigen::AngleAxisd(config.TS_roll, Eigen::Vector3d::UnitX()) *
-       Eigen::AngleAxisd(config.TS_pitch, Eigen::Vector3d::UnitY()) *
-       Eigen::AngleAxisd(config.TS_yaw, Eigen::Vector3d::UnitZ()))
+          Eigen::AngleAxisd(config.TS_pitch, Eigen::Vector3d::UnitY()) *
+          Eigen::AngleAxisd(config.TS_yaw, Eigen::Vector3d::UnitZ()))
           .toRotationMatrix();
 
   T_TS.translation() =
@@ -144,7 +147,7 @@ void OdometryTransformer::reconfigureOdometryTransformer(
       "T_r_TS [x, y, z]: " << T_ST_.inverse().translation().transpose());
   ROS_DEBUG_STREAM(
       "q_TS [x, y, z, w]: "
-      << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
+          << Eigen::Quaterniond(T_ST_.inverse().rotation()).coeffs().transpose());
 
   // Update parameter array.
   const Eigen::Quaterniond q_TS = Eigen::Quaterniond(T_TS.linear());
