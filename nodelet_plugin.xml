@@ -1,0 +1,9 @@
+<library path="lib/libodometry_transformer">
+    <class name="odometry_transformer/OdometryTransformerNodelet"
+           type="odometry_transformer::OdometryTransformerNodelet"
+           base_class_type="nodelet::Nodelet">
+        <description>
+            This nodelet transforms odometry between two coordinate frames on the same rigid body.
+        </description>
+    </class>
+</library>
