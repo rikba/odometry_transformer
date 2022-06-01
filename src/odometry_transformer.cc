@@ -132,7 +132,7 @@ void OdometryTransformer::initializeDynamicReconfigure() {
       odometry_transformer::OdometryTransformerConfig>::CallbackType f;
   f = std::bind(&OdometryTransformer::reconfigureOdometryTransformer, this,
                 std::placeholders::_1, std::placeholders::_2);
-  dyn_server_.emplace();
+  dyn_server_.emplace(nh_private_);
   dyn_server_->setCallback(f);
 }
 
