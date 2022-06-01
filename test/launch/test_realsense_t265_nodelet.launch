@@ -1,21 +1,65 @@
 <launch>
+    <!-- Nodelet specific parameters -->
+    <arg name="manager" default="nodelet_manager"/>
+
+    <!-- Array parameters -->
+    <arg name="q_TS" value="[0, 0.3826834, 0, 0.9238796]"/>
+    <arg name="T_r_TS" value="[1.0, 0.0, 0.0]"/>
+
     <node type="rviz" name="rviz" pkg="rviz"
           args="-d $(find odometry_transformer)/test/cfg/test_realsense_t265.rviz"/>
 
-    <node pkg="nodelet" type="nodelet" name="nodelet_manager" args="manager" cwd="node" output="screen"/>
-    <node pkg="nodelet" type="nodelet" name="odometry_transformer_nodelet" args="load odometry_transformer/OdometryTransformerNodelet nodelet_manager">
+    <group ns="camera">
+    <node pkg="nodelet" type="nodelet" name="$(arg manager)" args="manager" cwd="node" output="screen"/>
+    <node pkg="nodelet" type="nodelet" name="odometry_transformer_nodelet" args="load odometry_transformer/OdometryTransformerNodelet $(arg manager)">
         <remap from="source_odometry" to="/camera/odom/sample"/>
         <remap from="target_odometry" to="/camera/odom_body/sample"/>
 
         <param name="source_frame" value="camera_pose_frame"/>
         <param name="target_frame" value="robot_body_frame"/>
 
-        <!--rosparam param="q_TS" subst_value="True">[0, 0.3826834, 0, 0.9238796]</rosparam>
-        <rosparam param="T_r_TS" subst_value="True">[1.0, 0.0, 0.0]</rosparam-->
+        <rosparam param="q_TS" subst_value="True">$(arg q_TS)</rosparam>
+        <rosparam param="T_r_TS" subst_value="True">$(arg T_r_TS)</rosparam>
 
         <param name="lookup_tf" value="false"/>
         <param name="queue_size" value="1"/>
-        <param name="tcp_no_delay" value="false"/>
+        <param name="tcp_no_delay" value="false"/> <!-- This is not necessary for nodelets! -->
     </node>
+    <!-- Realsense tracking module settings -->
+    <rosparam command="load" file="$(find odometry_transformer)/test/cfg/t265.yaml" />
+    <!-- Realsense nodelet -->
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+        <arg name="tf_prefix"                value="camera"/>
+        <arg name="serial_no"                value=""/>
+        <arg name="usb_port_id"              value=""/>
+        <arg name="device_type"              value="t265"/>
+        <arg name="json_file_path"           value=""/>
+
+        <arg name="enable_sync"              value="false"/>
+
+        <arg name="fisheye_width"            value="-1"/>
+        <arg name="fisheye_height"           value="-1"/>
+        <arg name="enable_fisheye1"          value="false"/>
+        <arg name="enable_fisheye2"          value="false"/>
+
+        <arg name="fisheye_fps"              value="-1"/>
+        <arg name="gyro_fps"                 value="-1"/>
+        <arg name="accel_fps"                value="-1"/>
+        <arg name="enable_gyro"              value="true"/>
+        <arg name="enable_accel"             value="true"/>
+        <arg name="enable_pose"              value="true"/>
+
+        <arg name="linear_accel_cov"         value="0.01"/>
+        <arg name="initial_reset"            value="true"/>
+        <arg name="reconnect_timeout"        value="5.0"/>
+        <arg name="unite_imu_method"         value=""/>
+
+        <arg name="publish_odom_tf"          value="true"/>
+
+        <!-- Nodelet specific settings -->
+        <arg name="external_manager"         value="true"/>
+        <arg name="manager"                  value="$(arg manager)"/>
+    </include>
+    </group>
 
 </launch>
