@@ -30,7 +30,7 @@ set(CMAKE_BUILD_TYPE Release)
 #############
 add_library(${PROJECT_NAME} src/odometry_transformer.cc
                             src/odometry_transformer_nodelet.cc)
-target_link_libraries(${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 ############
 # Binaries #
