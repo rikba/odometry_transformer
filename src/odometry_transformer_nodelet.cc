@@ -1,5 +1,5 @@
 #include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 
 #include "odometry_transformer/odometry_transformer.h"
 
