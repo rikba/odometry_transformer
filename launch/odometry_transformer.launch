@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <launch>
   <!-- The original odometry source topic -->
   <arg name="source_odometry" default="source_odometry"/>

@@ -1,5 +1,5 @@
 #include <nodelet/nodelet.h>
-#include <pluginlib/class_list_macros.h>
+#include <pluginlib/class_list_macros.hpp>
 
 #include "odometry_transformer/odometry_transformer.h"
 
@@ -11,7 +11,7 @@ class OdometryTransformerNodelet : public nodelet::Nodelet {
     try {
       tf_ = std::make_shared<OdometryTransformer>(getNodeHandle(),
                                                   getPrivateNodeHandle());
-    } catch (std::runtime_error e) {
+    } catch (const std::runtime_error& e) {
       ROS_ERROR("%s", e.what());
     }
   }
