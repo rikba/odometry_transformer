@@ -252,7 +252,7 @@ void OdometryTransformer::receivePose(
   target_pose.header = source_pose->header;
   target_pose.pose.pose = Eigen::toMsg(T_IT);
 
-  // TODO(rikba): Transform covariance.
+  // TODO(TimonMathis): Transform covariance.
 
   // Publish transformed odometry.
   pose_pub_.publish(target_pose);
