@@ -6,7 +6,10 @@
 
 #include <Eigen/Geometry>
 #include <dynamic_reconfigure/server.h>
+
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
+
 #include <ros/ros.h>
 #include <tf2_ros/static_transform_broadcaster.h>
 
@@ -23,6 +26,7 @@ public:
 
 private:
   void receiveOdometry(const nav_msgs::OdometryConstPtr &source_odometry);
+  void receivePose(const geometry_msgs::PoseWithCovarianceStampedPtr &source_odometry);
   void broadcastCalibration();
 
   void initializeDynamicReconfigure();
@@ -33,6 +37,7 @@ private:
   std::string target_frame_ = "";
   int queue_size_ = 1;
   bool tcp_no_delay_ = false;
+  bool pose_transform_ = false;
 
   // Optionally publish TF and offer dynamic reconfigure if calibration is set
   // from ROS parameter server.
@@ -49,6 +54,9 @@ private:
 
   ros::Subscriber odometry_sub_;
   ros::Publisher odometry_pub_;
+
+  ros::Subscriber pose_sub_;
+  ros::Publisher pose_pub_;
 };
 } // namespace odometry_transformer
 

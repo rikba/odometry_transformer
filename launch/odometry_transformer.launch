@@ -3,6 +3,14 @@
   <arg name="source_odometry" default="source_odometry"/>
   <!-- The desired odometry target topic -->
   <arg name="target_odometry" default="target_odometry"/>
+
+  <!-- Additionally convert Pose message (PoseWithCovarianceStamped) from the same source to target fragem -->
+  <arg name="pose_transform" default="false"/>
+  <!-- The original pose source topic -->
+  <arg name="source_pose" default="source_pose"/>
+  <!-- The desired pose target topic -->
+  <arg name="target_pose" default="target_pose"/>
+
   <!-- The original odometry source frame id. -->
   <arg name="source_frame" default="source"/>
   <!-- The desired odometry target frame id. -->
@@ -26,6 +34,9 @@
     <remap from="source_odometry" to="$(arg source_odometry)"/>
     <remap from="target_odometry" to="$(arg target_odometry)"/>
 
+    <remap from="source_pose" to="$(arg source_pose)"/>
+    <remap from="target_pose" to="$(arg target_pose)"/>
+
     <param name="source_frame" value="$(arg source_frame)"/>
     <param name="target_frame" value="$(arg target_frame)"/>
 
@@ -35,6 +46,8 @@
     <param name="lookup_tf" value="$(arg lookup_tf)"/>
     <param name="queue_size" value="$(arg queue_size)"/>
     <param name="tcp_no_delay" value="$(arg tcp_no_delay)"/>
+
+    <param name="pose_transform" value="$(arg pose_transform)"/>
 
   </node>
 </launch>
