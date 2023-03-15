@@ -32,7 +32,7 @@ private:
   std::string source_frame_ = "";
   std::string target_frame_ = "";
   int queue_size_ = 1;
-  bool tcp_no_delay_ = true;
+  bool tcp_no_delay_ = false;
 
   // Optionally publish TF and offer dynamic reconfigure if calibration is set
   // from ROS parameter server.
