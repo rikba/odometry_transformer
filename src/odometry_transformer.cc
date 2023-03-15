@@ -85,6 +85,14 @@ void OdometryTransformer::getRosParameters() {
   } else {
     ROS_INFO("TCP no delay de-activated.");
   }
+
+  // Pose transform as well
+  nh_private_.getParam("pose_transform", pose_transform_);
+  if (pose_transform_) {
+    ROS_INFO("Pose transform activated.");
+  } else {
+    ROS_INFO("Pose transform de-activated.");
+  }
 }
 
 void OdometryTransformer::subscribeToRosTopics() {
@@ -96,12 +104,27 @@ void OdometryTransformer::subscribeToRosTopics() {
                                 ? ros::TransportHints().tcpNoDelay()
                                 : ros::TransportHints());
   ROS_INFO("Subscribed to %s", odometry_sub_.getTopic().c_str());
+
+  if(pose_transform_){
+      pose_sub_ = nh_.subscribe("source_pose",
+                                queue_size_,
+                                &OdometryTransformer::receivePose,
+                                this,
+                                tcp_no_delay_
+                                ? ros::TransportHints().tcpNoDelay()
+                                : ros::TransportHints());
+  ROS_INFO("Subscribed to %s", pose_sub_.getTopic().c_str());
+  }
 }
 
 void OdometryTransformer::advertiseRosTopics() {
   odometry_pub_ =
       nh_.advertise<nav_msgs::Odometry>("target_odometry", queue_size_);
   ROS_INFO("Advertising %s", odometry_pub_.getTopic().c_str());
+
+  pose_pub_ =
+      nh_.advertise<geometry_msgs::PoseWithCovarianceStamped>("target_pose", queue_size_);
+  ROS_INFO("Advertising %s", pose_pub_.getTopic().c_str());
 }
 
 void OdometryTransformer::broadcastCalibration() {
@@ -211,6 +234,28 @@ void OdometryTransformer::receiveOdometry(
 
   // Publish transformed odometry.
   odometry_pub_.publish(target_odometry);
+}
+
+void OdometryTransformer::receivePose(
+    const geometry_msgs::PoseWithCovarianceStampedPtr &source_pose) {
+  ROS_INFO_ONCE("Received first pose message.");
+
+  // Get source pose in inertial/world coordinate frame.
+  Eigen::Affine3d T_IS;
+  Eigen::fromMsg(source_pose->pose.pose, T_IS);
+
+  // Compute pose of target frame.
+  const Eigen::Affine3d T_IT = T_IS * T_ST_;
+
+  // Convert to target odometry.
+  geometry_msgs::PoseWithCovarianceStamped target_pose;
+  target_pose.header = source_pose->header;
+  target_pose.pose.pose = Eigen::toMsg(T_IT);
+
+  // TODO(TimonMathis): Transform covariance.
+
+  // Publish transformed odometry.
+  pose_pub_.publish(target_pose);
 }
 
 } // namespace odometry_transformer

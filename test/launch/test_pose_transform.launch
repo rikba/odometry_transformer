@@ -1,20 +1,20 @@
 <launch>
   <!-- The original odometry source topic -->
-  <arg name="source_odometry" default="source_odometry"/>
+  <arg name="source_odometry" default="/msf_core/odometry"/>
   <!-- The desired odometry target topic -->
-  <arg name="target_odometry" default="target_odometry"/>
+  <arg name="target_odometry" default="/msf_core/odometry_prism"/>
 
   <!-- Additionally convert Pose message (PoseWithCovarianceStamped) from the same source to target fragem -->
-  <arg name="pose_transform" default="false"/>
+  <arg name="pose_transform" default="true"/>
   <!-- The original pose source topic -->
-  <arg name="source_pose" default="source_pose"/>
+  <arg name="source_pose" default="/msf_core/pose"/>
   <!-- The desired pose target topic -->
-  <arg name="target_pose" default="target_pose"/>
+  <arg name="target_pose" default="/msf_core/pose_prism"/>
 
   <!-- The original odometry source frame id. -->
-  <arg name="source_frame" default="source"/>
+  <arg name="source_frame" default="state"/>
   <!-- The desired odometry target frame id. -->
-  <arg name="target_frame" default="target"/>
+  <arg name="target_frame" default="prism"/>
   <!-- The static calibration from the target frame to the source frame in the target coordinate frame. -->
   <!-- Rotation from target frame to source frame. Quaternion as [x,y,z,w] -->
   <!-- See also https://www.andre-gaschler.com/rotationconverter/ -->
@@ -22,7 +22,7 @@
   <!-- Translation from target frame to source frame. -->
   <arg name="T_r_TS" default="[0.0, 0.0, 0.0]"/>
   <!-- Instead of parametric calibration, the node can lookup the sensor calibration from TF. -->
-  <arg name="lookup_tf" default="false"/>
+  <arg name="lookup_tf" default="true"/>
   <!-- Queue size for odometry messages. -->
   <arg name="queue_size" default="1"/>
   <!-- Use tcpNoDelay() to subscribe to source odometry. Uses more CPU! -->
